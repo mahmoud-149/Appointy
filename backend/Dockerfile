@@ -28,8 +28,14 @@ ENV MONGODB_URI=mongodb+srv://test12:modymody@cluster0.t5qeqeb.mongodb.net\
   RAZORPAY_KEY_ID=rzp_test_placeholder\
   RAZORPAY_KEY_SECRET=placeholder_secret 
 
-RUN  mkdir -p home/app
+WORKDIR /home/app
 
-COPY . /home/app
+COPY package*.json ./
 
-CMD [ "node", "/home/app/server.js" ]
+RUN npm ci || npm install
+
+COPY . .
+
+EXPOSE 4000
+
+CMD [ "node", "server.js" ]
