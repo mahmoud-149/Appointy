@@ -15,16 +15,16 @@ COPY . .
 RUN npm run build
 
 
-FROM nginx:alpine AS Runner
+FROM nginxinc/nginx-unprivileged:alpine AS Runner
 
 
 
-RUN rm -rf /usr/share/nginx/html/*
 
-COPY --from=Builder /app/dist  /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --chown=nginx:nginx --from=Builder /app/dist  /usr/share/nginx/html
+COPY --chown=nginx:nginx  nginx.conf /etc/nginx/conf.d/default.conf
 
-
-EXPOSE 80
+#if we use the nginx user we cann't use port 80 because of linux consider from 1 to 1023 as privileged system ports
+# and only the root superuser has permission
+EXPOSE 8080
 
 CMD ["nginx", "-g", "daemon off;"]
