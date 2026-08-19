@@ -1,0 +1,49 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo-DB
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]  # runs INSIDE the mongo container
+      interval: 10s     # check every 10s
+      timeout: 5s       # fail this check if it takes longer than 5s
+      retries: 5        # must fail 5 times in a row before marked "unhealthy"
+      start_period: 10s # grace period at startup before failures even count  
+    restart:   unless-stopped
+  backend:
+    build: ./backend
+    container_name: backendAppoin
+    environment:
+      MONGO_URI: ${MONGODB_URI}
+    ports:
+      - "${BACKEND_PORT}:4000"
+    depends_on:
+      mongo:
+        condition: service_healthy   # ← THIS is the fix. Wait for healthy, not just started.    
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:4000/health', res => process.exit(res.statusCode === 200 ? 0 : 1))"]  # your own endpoint
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart:   unless-stopped
+
+  frontend:
+    build: ./frontend      # your multistage Dockerfile with nginx:alpine runner stage
+    container_name: frontend-appoin
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_PORT}:8080"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    restart:   unless-stopped
+
+volumes:
+  mongo-data:
+    name: ${MONGO_DATA_VOLUME}
