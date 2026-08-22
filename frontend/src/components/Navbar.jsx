@@ -34,7 +34,7 @@ const Navbar = () => {
           <NavLink to='/doctors' className={({ isActive }) => isActive ? 'border-b-2 border-primary' : ''}>ALL DOCTORS</NavLink>
         </li>
         <li className='pb-0.5'>
-          <NavLink to='/about' className={({ isActive }) => isActive ? 'border-b-2 border-primary' : ''}>ABOUT</NavLink>
+          <NavLink to='/about' className={({ isActive }) => isActive ? 'border-b-2 border-primary' : ''}>ABOUT US</NavLink>
         </li>
         <li className='pb-0.5'>
           <NavLink to='/contact' className={({ isActive }) => isActive ? 'border-b-2 border-primary' : ''}>CONTACT</NavLink>
