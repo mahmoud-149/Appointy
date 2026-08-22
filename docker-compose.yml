@@ -12,7 +12,7 @@ services:
       start_period: 10s # grace period at startup before failures even count  
     restart:   unless-stopped
   backend:
-    build: ./backend
+    image: mahmoud148/appointy-backend:latest
     container_name: backendAppoin
     environment:
       MONGO_URI: ${MONGODB_URI}
@@ -30,7 +30,8 @@ services:
     restart:   unless-stopped
 
   frontend:
-    build: ./frontend      # your multistage Dockerfile with nginx:alpine runner stage
+    image: mahmoud148/appointy-frontend:latest
+      # your multistage Dockerfile with nginx:alpine runner stage
     container_name: frontend-appoin
     depends_on:
       - backend
