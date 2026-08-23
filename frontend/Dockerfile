@@ -1,6 +1,6 @@
 FROM node:22-alpine AS Builder
 
-ENV VITE_BACKEND_URL=http://localhost:4000
+ENV VITE_BACKEND_URL= 
 WORKDIR /app
 
 # Copy package definitions first
