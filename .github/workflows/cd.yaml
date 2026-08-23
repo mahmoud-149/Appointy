@@ -5,7 +5,7 @@ on:
     types:
       - completed
     branches:
-      - dev # Or master  
+      - main # Or master  
 jobs:
   GetTheFile:
     runs-on: ubuntu-latest
