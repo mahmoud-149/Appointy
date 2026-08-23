@@ -1,9 +1,22 @@
-name: test the ec2 connection
+name: CD
 on:
   push:
     branches:
       - main
 jobs:
+  GetTheFile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: copy files via ssh
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          source: "docker-compose.yml,.env"
+          target: "/home/${{ secrets.EC2_USERNAME }}/app"
   theTest:
     runs-on: ubuntu-latest
     steps:
@@ -14,4 +27,10 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: ${{ secrets.PORT }}
-          script: whoami >> hello.txt
+          script: |
+            cd /home/ubuntu/app
+            docker compose down
+            docker compose pull
+            docker compose up  -d
+
+                    
