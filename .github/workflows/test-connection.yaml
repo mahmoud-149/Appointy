@@ -21,7 +21,7 @@ name: test the ec2 connection
 on:
   push:
     branches:
-      - feature/mahmoud
+      - stop
 jobs:
   theTest:
     runs-on: ubuntu-latest
