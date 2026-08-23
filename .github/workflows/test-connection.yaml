@@ -1,0 +1,38 @@
+# name: test the ec2 connection
+# on:
+#   push:
+#     branches:
+#       - feature/mahmoud
+# jobs:
+#   theTest:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Execute remote SSH commands using SSH key
+#         uses: appleboy/ssh-action@v1
+#         with:
+#           host: ${{ secrets.EC2_HOST }}
+#           username: ${{ secrets.EC2_USERNAME }}
+#           key: ${{ secrets.EC2_SSH_KEY }}
+#           port: ${{ secrets.PORT }}
+#           script: whoami >> hello.txt
+
+
+name: test the ec2 connection
+on:
+  push:
+    branches:
+      - stop
+jobs:
+  theTest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: copy files via ssh
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          source: "docker-compose.yml,.env"
+          target: "/home/${{ secrets.EC2_USERNAME }}/app"
