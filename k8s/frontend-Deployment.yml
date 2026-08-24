@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointyfrontend-deployment
+  labels:
+    app: appoinfront
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: appoinfront
+  template:
+    metadata:
+      labels:
+        app: appoinfront
+    spec:
+      containers:
+      - name: frontend
+        image: mahmoud148/appointy-frontend:latest
+        ports:
+          - containerPort: 8080
+

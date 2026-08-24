@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appointybackend-deployment
+  labels:
+    app: appoinback
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: appoinback
+  template:
+    metadata:
+      labels:
+        app: appoinback
+    spec:
+      containers:
+      - name: backend
+        image: mahmoud148/appointy-backend:latest
+        ports:
+          - containerPort: 4000
+        env:
+        - name: MONGO_URI
+          value: "mongodb://mongo:27017/appointy"      
